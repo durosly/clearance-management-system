@@ -1,4 +1,5 @@
-import UserWrapper from "../components/layout/user-wrapper";
+import UserWrapper from "../../components/layout/user-wrapper";
+import Link from "next/link";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -47,11 +48,16 @@ function Profile() {
 						sm={4}
 						md={3}
 					>
-						<Card border="danger">
+						<Card border="warning">
 							<Card.Body>
 								<Card.Title>Profile completion</Card.Title>
 
-								<Card.Link href="#">Complete process</Card.Link>
+								<Link
+									href="/profile/complete"
+									passHref
+								>
+									<Card.Link>Complete process</Card.Link>
+								</Link>
 							</Card.Body>
 						</Card>
 					</Col>
