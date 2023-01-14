@@ -1,75 +1,69 @@
-import React from "react";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Offcanvas from "react-bootstrap/Offcanvas";
 
 function Header() {
+	const expand = "md";
 	return (
-		<div className="container">
-			<header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-				<a
-					href="/"
-					className="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"
+		<Navbar
+			bg="light"
+			expand={expand}
+			className="mb-3"
+		>
+			<Container fluid>
+				<Navbar.Brand href="#">Navbar Offcanvas</Navbar.Brand>
+				<Navbar.Toggle
+					aria-controls={`offcanvasNavbar-expand-${expand}`}
+				/>
+				<Navbar.Offcanvas
+					id={`offcanvasNavbar-expand-${expand}`}
+					aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
+					placement="end"
 				>
-					<svg
-						className="bi me-2"
-						width={40}
-						height={32}
-						role="img"
-						aria-label="Bootstrap"
-					>
-						<use xlinkHref="#bootstrap" />
-					</svg>
-				</a>
-				<ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-					<li>
-						<a
-							href="#"
-							className="nav-link px-2 link-secondary"
+					<Offcanvas.Header closeButton>
+						<Offcanvas.Title
+							id={`offcanvasNavbarLabel-expand-${expand}`}
 						>
-							Home
-						</a>
-					</li>
-					<li>
-						<a
-							href="#"
-							className="nav-link px-2 link-dark"
-						>
-							Features
-						</a>
-					</li>
-					<li>
-						<a
-							href="#"
-							className="nav-link px-2 link-dark"
-						>
-							Pricing
-						</a>
-					</li>
-					<li>
-						<a
-							href="#"
-							className="nav-link px-2 link-dark"
-						>
-							FAQs
-						</a>
-					</li>
-					<li>
-						<a
-							href="#"
-							className="nav-link px-2 link-dark"
-						>
-							About
-						</a>
-					</li>
-				</ul>
-				<div className="col-md-3 text-end">
-					<button
-						type="button"
-						className="btn btn-primary"
-					>
-						Sign-up
-					</button>
-				</div>
-			</header>
-		</div>
+							Offcanvas
+						</Offcanvas.Title>
+					</Offcanvas.Header>
+					<Offcanvas.Body>
+						<Nav className="justify-content-end flex-grow-1 pe-3">
+							<Nav.Link href="#action1">Home</Nav.Link>
+							<Nav.Link href="#action2">Link</Nav.Link>
+							<NavDropdown
+								title="Dropdown"
+								id={`offcanvasNavbarDropdown-expand-${expand}`}
+							>
+								<NavDropdown.Item href="#action3">
+									Action
+								</NavDropdown.Item>
+								<NavDropdown.Item href="#action4">
+									Another action
+								</NavDropdown.Item>
+								<NavDropdown.Divider />
+								<NavDropdown.Item href="#action5">
+									Something else here
+								</NavDropdown.Item>
+							</NavDropdown>
+						</Nav>
+						<Form className="d-flex">
+							<Form.Control
+								type="search"
+								placeholder="Search"
+								className="me-2"
+								aria-label="Search"
+							/>
+							<Button variant="outline-success">Search</Button>
+						</Form>
+					</Offcanvas.Body>
+				</Navbar.Offcanvas>
+			</Container>
+		</Navbar>
 	);
 }
 
