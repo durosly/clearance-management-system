@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-// import UserModel from "../../../models/user"
+import UserModel from "../../../models/user";
 // import EmailVerificationModel from '../../../models/emailVerification'
 
 export default NextAuth({
@@ -28,19 +28,19 @@ export default NextAuth({
 			// },
 			async authorize(credentials, req) {
 				// Add logic here to look up the user from the credentials supplied
-				//   await mongoose.connect(process.env.MONGODB_URL)
+				await mongoose.connect(process.env.MONGODB_URL);
 				let authorize = false;
-				//   const user = await UserModel.findOne({ email: credentials.email })
+				const user = await UserModel.findOne({
+					email: credentials.email,
+				});
 
-				//   if(user) {
-				//     const emailVerification = await EmailVerificationModel.findOne({ email: credentials.email })
-
-				//     if(!emailVerification) { // ! That is user is verified if they don't exit in email verification database
-
-				//       const valid = bcrypt.compareSync(credentials.password, user.password)
-				//       if(valid) authorize = true
-				//     }
-				//   }
+				if (user) {
+					const valid = bcrypt.compareSync(
+						credentials.password,
+						user.password
+					);
+					if (valid) authorize = true;
+				}
 
 				if (authorize) {
 					// Any object returned will be saved in `user` property of the JWT
@@ -51,7 +51,8 @@ export default NextAuth({
 					};
 				} else {
 					// If you return null then an error will be displayed advising the user to check their details.
-					return null;
+					// return null;
+					throw new Error("Invalid credentials");
 
 					// You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
 				}
