@@ -31,6 +31,10 @@ function Profile() {
 							100
 						</p>
 						<p>
+							<b className="me-2">Department:</b>
+							Mechanical Engineer
+						</p>
+						<p>
 							<b className="me-2">Status:</b>
 							<Badge bg="secondary">Pending...</Badge>
 						</p>
