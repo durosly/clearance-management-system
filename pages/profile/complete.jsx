@@ -3,6 +3,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import UserWrapper from "../../components/layout/user-wrapper";
 import PersonalDetails from "../../components/registration/personal-details";
+import StateOfOrigin from "../../components/proof/state-of-origin";
+import BirthCertificate from "../../components/proof/birth-certificate";
 
 function CompleteProfile() {
 	return (
@@ -17,7 +19,9 @@ function CompleteProfile() {
 						</p>
 					</Col>
 				</Row>
-				<PersonalDetails />
+				{/* <PersonalDetails /> */}
+				{/* <StateOfOrigin /> */}
+				<BirthCertificate />
 			</Container>
 		</UserWrapper>
 	);
