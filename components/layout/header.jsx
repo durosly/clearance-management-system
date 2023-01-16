@@ -3,8 +3,9 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+// import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Link from "next/link";
 
 function Header() {
 	const expand = "md";
@@ -15,7 +16,7 @@ function Header() {
 			className="mb-3"
 		>
 			<Container fluid>
-				<Navbar.Brand href="#">Navbar Offcanvas</Navbar.Brand>
+				<Navbar.Brand href="#">Student Portal</Navbar.Brand>
 				<Navbar.Toggle
 					aria-controls={`offcanvasNavbar-expand-${expand}`}
 				/>
@@ -28,14 +29,19 @@ function Header() {
 						<Offcanvas.Title
 							id={`offcanvasNavbarLabel-expand-${expand}`}
 						>
-							Offcanvas
+							Student Portal
 						</Offcanvas.Title>
 					</Offcanvas.Header>
 					<Offcanvas.Body>
 						<Nav className="justify-content-end flex-grow-1 pe-3">
-							<Nav.Link href="#action1">Home</Nav.Link>
-							<Nav.Link href="#action2">Link</Nav.Link>
-							<NavDropdown
+							<Link
+								href="/profile"
+								passHref
+							>
+								<Nav.Link>Home</Nav.Link>
+							</Link>
+							{/* <Nav.Link href="#action2">Link</Nav.Link> */}
+							{/* <NavDropdown
 								title="Dropdown"
 								id={`offcanvasNavbarDropdown-expand-${expand}`}
 							>
@@ -49,17 +55,17 @@ function Header() {
 								<NavDropdown.Item href="#action5">
 									Something else here
 								</NavDropdown.Item>
-							</NavDropdown>
+							</NavDropdown> */}
 						</Nav>
-						<Form className="d-flex">
+						{/* <Form className="d-flex">
 							<Form.Control
 								type="search"
 								placeholder="Search"
 								className="me-2"
 								aria-label="Search"
 							/>
-							<Button variant="outline-success">Search</Button>
-						</Form>
+						</Form> */}
+						<Button variant="outline-success">Log out</Button>
 					</Offcanvas.Body>
 				</Navbar.Offcanvas>
 			</Container>
