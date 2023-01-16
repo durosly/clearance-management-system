@@ -10,7 +10,15 @@ export default NextAuth({
 	callbacks: {
 		async session({ session, token, user }) {
 			session.accessToken = token.accessToken;
+			session.user.type = token.type;
 			return session;
+		},
+		async jwt({ token, user }) {
+			if (user) {
+				// token.accessToken = account.access_token;
+				token.type = user.type;
+			}
+			return token;
 		},
 	},
 	secret: process.env.NEXTAUTH_SECRET,
@@ -47,7 +55,7 @@ export default NextAuth({
 					return {
 						email: user.email,
 						name: `${user.firstname} ${user.lastname}`,
-						isAdmin: user.is_admin || false,
+						type: user.type || "student",
 					};
 				} else {
 					// If you return null then an error will be displayed advising the user to check their details.

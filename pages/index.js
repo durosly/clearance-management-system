@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Link from "next/link";
-import axios from "axios";
 import { useRouter } from "next/router";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 import { signIn } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 function Home() {
 	const router = useRouter();
@@ -60,7 +60,7 @@ function Home() {
 			<div className="container col-xl-10 col-xxl-8 px-4 py-5">
 				<div className="row">
 					<Alert
-						className="mt-5"
+						// className="mt-5"
 						show={showAlert.show}
 						onClose={() =>
 							setShowAlert({ ...showAlert, show: false })
@@ -144,3 +144,19 @@ function Home() {
 }
 
 export default Home;
+
+export async function getServerSideProps(context) {
+	const session = await getSession({ req: context.req });
+	console.log(session);
+	// Pass data to the page via props
+
+	if (session?.user?.type === "student") {
+		return {
+			redirect: {
+				destination: "/profile",
+				permanent: false,
+			},
+		};
+	}
+	return { props: {} };
+}
