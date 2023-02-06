@@ -19,12 +19,14 @@ function CompleteProfile() {
 						</p>
 					</Col>
 				</Row>
-				{/* <PersonalDetails /> */}
+				<PersonalDetails />
 				{/* <StateOfOrigin /> */}
-				<BirthCertificate />
+				{/* <BirthCertificate /> */}
 			</Container>
 		</UserWrapper>
 	);
 }
 
 export default CompleteProfile;
+
+export async function getServerSideProps(context) {}

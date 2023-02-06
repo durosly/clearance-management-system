@@ -7,6 +7,8 @@ import Image from "react-bootstrap/Image";
 import Badge from "react-bootstrap/Badge";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import mongoose from "mongoose";
+import ProfileModel from "../../models/profile";
 
 function Profile() {
 	return (
@@ -201,3 +203,5 @@ function Profile() {
 }
 
 export default Profile;
+
+export async function getServerSideProps(context) {}
