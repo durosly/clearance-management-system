@@ -4,6 +4,7 @@ const profileSchema = new mongoose.Schema({
 	_userId: String,
 	jambreg: String,
 	dob: Date,
+	birthcertificate: String,
 	stateoforigin: String,
 	soproof: String, // ! Proof of state of origin
 	localoforigin: String,

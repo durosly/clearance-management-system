@@ -35,9 +35,9 @@ async function handler(req, res) {
 			// await ProfileModel.create({ _userId: newUser.id });
 
 			// await user.save();
-			res.status(200).json({ msg: "Success" });
+			res.status(200).json({ ok: true, msg: "Success" });
 		} catch (error) {
-			res.status(401).json({ msg: error.message });
+			res.status(401).json({ ok: true, msg: error.message });
 		}
 	} else {
 		// throw new Error("Invalid request method")

@@ -1,11 +1,21 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import axios from "axios";
 
-function PersonalDetails() {
-	const [profile, setProfile] = useState({
+function PersonalDetails({ user }) {
+	const router = useRouter();
+	const [isLoading, setIsLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
+	const [errorStatus, setErrorStatus] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("");
+	const [personalDetails, setPersonalDetails] = useState({
+		fullname: `${user.firstname} ${user.lastname}`,
+		email: user.email,
 		jambreg: "",
 		dob: "",
 		soo: "",
@@ -14,11 +24,48 @@ function PersonalDetails() {
 		lgr: "",
 		address: "",
 	});
+	const { fullname, email, jambreg, dob, soo, loo, sor, lor, address } =
+		personalDetails;
 
+	async function handleSubmit(e) {
+		e.preventDefault();
+		setIsLoading(true);
+
+		try {
+			const response = await axios.post("/api/profile/complete", {
+				...personalDetails,
+			});
+			if (response.data.ok) {
+				setSuccess(true);
+				setErrorStatus(false);
+
+				setTimeout(() => {
+					router.reload();
+				}, 5000);
+			} else {
+				throw new Error(response.data.msg);
+			}
+		} catch (error) {
+			let err = "";
+
+			if (error?.response) {
+				err = error.response.msg;
+			} else {
+				err = error.message;
+			}
+
+			setErrorStatus(true);
+			setErrorMsg(err);
+			setIsLoading(false);
+		}
+	}
 	return (
 		<Row>
 			<Col>
-				<Form>
+				<Form
+					onSubmit={handleSubmit}
+					action="/complete-profile"
+				>
 					<Form.Group
 						className="mb-3"
 						controlId="fullname"
@@ -26,7 +73,7 @@ function PersonalDetails() {
 						<Form.Label>Full name</Form.Label>
 						<Form.Control
 							type="text"
-							value={"John Doe"}
+							value={fullname}
 							disabled
 						/>
 					</Form.Group>
@@ -38,7 +85,7 @@ function PersonalDetails() {
 						<Form.Control
 							type="email"
 							placeholder="Enter email"
-							value={"Nice@gamil.com"}
+							value={email}
 							disabled
 						/>
 					</Form.Group>
@@ -51,10 +98,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="e.g 123456BC"
 							name="jambreg"
-							value={profile.jambreg}
+							value={jambreg}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -70,10 +117,10 @@ function PersonalDetails() {
 							min="1990-01-01"
 							max="2013-12-31"
 							name="dob"
-							value={profile.dob}
+							value={dob}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -88,10 +135,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="Delta..."
 							name="soo"
-							value={profile.soo}
+							value={soo}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -106,10 +153,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="Uvwie..."
 							name="loo"
-							value={profile.loo}
+							value={loo}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -125,10 +172,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="Abuja..."
 							name="sor"
-							value={profile.sor}
+							value={sor}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -143,10 +190,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="Akure..."
 							name="lor"
-							value={profile.lor}
+							value={lor}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -161,10 +208,10 @@ function PersonalDetails() {
 							type="text"
 							placeholder="11 nice street..."
 							name="address"
-							value={profile.address}
+							value={address}
 							onChange={(e) =>
-								setProfile({
-									...profile,
+								setPersonalDetails({
+									...personalDetails,
 									[e.target.name]: e.target.value,
 								})
 							}
@@ -174,9 +221,13 @@ function PersonalDetails() {
 					<Button
 						variant="primary"
 						type="submit"
+						disabled={isLoading}
 					>
-						Next
+						{isLoading ? "Loading..." : "Submit"}
 					</Button>
+
+					{errorStatus && <Alert variant="danger">{errorMsg}</Alert>}
+					{success && <Alert variant="success">Success</Alert>}
 				</Form>
 			</Col>
 		</Row>
