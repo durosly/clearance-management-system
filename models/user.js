@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
 	lastname: String,
 	email: String,
 	password: String,
+	passport: { type: String, default: "default.jpg" },
 	is_admin: { type: Boolean, default: false },
 	type: {
 		type: String,

@@ -53,6 +53,7 @@ export default NextAuth({
 				if (authorize) {
 					// Any object returned will be saved in `user` property of the JWT
 					return {
+						id: user.id,
 						email: user.email,
 						name: `${user.firstname} ${user.lastname}`,
 						type: user.type || "student",

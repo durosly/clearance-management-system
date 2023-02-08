@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 // import NavDropdown from "react-bootstrap/NavDropdown";
@@ -15,7 +15,7 @@ function Header() {
 			expand={expand}
 			className="mb-3"
 		>
-			<Container fluid>
+			<Container>
 				<Navbar.Brand href="#">Student Portal</Navbar.Brand>
 				<Navbar.Toggle
 					aria-controls={`offcanvasNavbar-expand-${expand}`}
@@ -35,10 +35,10 @@ function Header() {
 					<Offcanvas.Body>
 						<Nav className="justify-content-end flex-grow-1 pe-3">
 							<Link
+								className="btn btn-primary fbgv"
 								href="/profile"
-								passHref
 							>
-								<Nav.Link>Home</Nav.Link>
+								Home
 							</Link>
 							{/* <Nav.Link href="#action2">Link</Nav.Link> */}
 							{/* <NavDropdown

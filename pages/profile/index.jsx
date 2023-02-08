@@ -7,17 +7,21 @@ import Image from "react-bootstrap/Image";
 import Badge from "react-bootstrap/Badge";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import ProfileModel from "../../models/profile";
+import DepartmentModel from "../../models/department";
+import CollegeModel from "../../models/college";
+import SessionModel from "../../models/session";
+import handleSession from "../../session/handle-session";
 
-function Profile() {
+function Profile({ user, profile, department, userSession, college }) {
 	return (
 		<UserWrapper>
 			<Container className="mb-5">
 				<Row>
 					<Col>
 						<Image
-							src="https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+							src={`/images/profile/${user.passport}`}
 							roundedCircle
 							width={100}
 							height={100}
@@ -26,19 +30,29 @@ function Profile() {
 					<Col sm={9}>
 						<p>
 							<b className="me-2">Full name:</b>
-							John Doe
+							{user.fullname}
 						</p>
 						<p>
 							<b className="me-2">Level:</b>
-							100
+							{userSession.level}
+						</p>
+						<p>
+							<b className="me-2">Matric Number:</b>
+							{(profile && profile?.matricnumber) || "undefined"}
+						</p>
+						<p>
+							<b className="me-2">College:</b>
+							{college.name}
 						</p>
 						<p>
 							<b className="me-2">Department:</b>
-							Mechanical Engineer
+							{department.name}
 						</p>
 						<p>
 							<b className="me-2">Status:</b>
-							<Badge bg="secondary">Pending...</Badge>
+							<Badge bg="secondary">
+								{(profile && profile?.status) || "Pending..."}
+							</Badge>
 						</p>
 					</Col>
 				</Row>
@@ -59,10 +73,10 @@ function Profile() {
 								<Card.Title>Profile completion</Card.Title>
 
 								<Link
+									className="btn btn-primary"
 									href="/profile/complete"
-									passHref
 								>
-									<Card.Link>Complete process</Card.Link>
+									Complete process
 								</Link>
 							</Card.Body>
 						</Card>
@@ -80,7 +94,7 @@ function Profile() {
 									now={45}
 								/>
 
-								<Card.Link href="#">Complete payment</Card.Link>
+								<Link href="/nice">Complete payment</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -93,7 +107,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Course registration</Card.Title>
 
-								<Card.Link href="#">Complete process</Card.Link>
+								<Link href="/nice">Complete process</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -106,7 +120,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Security Form</Card.Title>
 
-								<Card.Link href="#">Fill out info</Card.Link>
+								<Link href="/nice">Fill out info</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -127,7 +141,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Registra</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -140,7 +154,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Library</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -153,7 +167,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>College</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -166,7 +180,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Department</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -179,7 +193,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Dean of student affairs</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -192,7 +206,7 @@ function Profile() {
 							<Card.Body>
 								<Card.Title>Medical</Card.Title>
 								<Card.Text>In progress</Card.Text>
-								<Card.Link href="#">Learn more...</Card.Link>
+								<Link href="/nice">Learn more...</Link>
 							</Card.Body>
 						</Card>
 					</Col>
@@ -204,4 +218,46 @@ function Profile() {
 
 export default Profile;
 
-export async function getServerSideProps(context) {}
+export async function getServerSideProps(context) {
+	const user = await handleSession({
+		req: context.req,
+		authLevel: ["student"],
+	});
+
+	if (!user) {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			},
+		};
+	}
+
+	const profile = await ProfileModel.findOne({ _userId: user.id });
+	const userSession = await SessionModel.findById(profile?._sessionId);
+	const userDepartment = await DepartmentModel.findById(
+		profile?._departmentId
+	);
+	const userCollege = await CollegeModel.findById(profile?._collegeId);
+
+	return {
+		props: {
+			user: {
+				fullname: `${user.firstname} ${user.lastname}`,
+				passport: user?.passport || "default.jpg",
+			},
+			profile: profile || null,
+			college: {
+				name: userCollege?.name || "undefined",
+				abbr: userCollege?.abbr || "undefined",
+			},
+			department: {
+				name: userDepartment?.name || "undefined",
+				abbr: userDepartment?.abbr || "undefined",
+			},
+			userSession: {
+				level: userSession?.level || "undefined",
+			},
+		},
+	};
+}

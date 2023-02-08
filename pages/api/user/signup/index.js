@@ -4,7 +4,8 @@ import UserModel from "../../../../models/User";
 async function handler(req, res) {
 	if (req.method === "POST") {
 		try {
-			await mongoose.connect(process.env.MONGODB_URL);
+			mongoose.connect(process.env.MONGODB_URL);
+
 			const { email, firstname, middlename, lastname, password } =
 				req.body;
 
@@ -30,6 +31,8 @@ async function handler(req, res) {
 				password,
 				lastname,
 			});
+
+			// await ProfileModel.create({ _userId: newUser.id });
 
 			// await user.save();
 			res.status(200).json({ msg: "Success" });

@@ -5,11 +5,11 @@ const profileSchema = new mongoose.Schema({
 	jambreg: String,
 	dob: Date,
 	stateoforigin: String,
-	soproof: String,
+	soproof: String, // ! Proof of state of origin
 	localoforigin: String,
 	stateofresidence: String,
 	localofresidence: String,
-	college: { type: String, enum: ["Technology", "Science"] },
+	_collegeId: String,
 	deanstatus: { type: Boolean, default: false },
 	address: String,
 	clearanceLevel: { type: Number, default: 0 },
@@ -21,9 +21,10 @@ const profileSchema = new mongoose.Schema({
 		enum: ["pending", "in-school", "out-of-school", "graduated"],
 		default: "pending",
 	},
+	created_at: { type: Date, default: Date.now },
 });
 
 const ProfileModel =
-	mongoose.models.Profile || mongoose.model("Profile", profileSchema);
+	mongoose?.models?.Profile || mongoose.model("Profile", profileSchema);
 
 export default ProfileModel;
