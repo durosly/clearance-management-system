@@ -14,7 +14,16 @@ import CollegeModel from "../../models/college";
 import SessionModel from "../../models/session";
 import handleSession from "../../session/handle-session";
 
-function Profile({ user, profile, department, userSession, college }) {
+import getRegistrationLevel from "../../lib/get-registration-level";
+
+function Profile({
+	user,
+	profile,
+	department,
+	userSession,
+	college,
+	registrationLevel,
+}) {
 	return (
 		<UserWrapper>
 			<Container className="mb-5">
@@ -86,7 +95,11 @@ function Profile({ user, profile, department, userSession, college }) {
 						sm={4}
 						md={3}
 					>
-						<Card border="danger">
+						<Card
+							border={`${
+								registrationLevel.v === "payment" && "danger"
+							}`}
+						>
 							<Card.Body>
 								<Card.Title>Payments</Card.Title>
 								<ProgressBar
@@ -239,6 +252,7 @@ export async function getServerSideProps(context) {
 		profile?._departmentId
 	);
 	const userCollege = await CollegeModel.findById(profile?._collegeId);
+	const registrationLevel = await getRegistrationLevel({ user });
 
 	return {
 		props: {
@@ -258,6 +272,7 @@ export async function getServerSideProps(context) {
 			userSession: {
 				level: userSession?.level || "undefined",
 			},
+			registrationLevel,
 		},
 	};
 }
