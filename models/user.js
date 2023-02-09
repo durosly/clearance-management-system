@@ -11,15 +11,7 @@ const userSchema = new mongoose.Schema({
 	is_admin: { type: Boolean, default: false },
 	type: {
 		type: String,
-		enum: [
-			"student",
-			"registra",
-			"libarian",
-			"medical",
-			"college",
-			"dean",
-			"department",
-		],
+		enum: ["student", "admin"],
 		default: "student",
 	},
 });
