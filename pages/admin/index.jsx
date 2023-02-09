@@ -6,6 +6,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
 
+import handleSession from "../../session/handle-session";
+
 function AdminLogin() {
 	const router = useRouter();
 	const [isLoading, setIsLoading] = useState(false);
@@ -126,3 +128,23 @@ function AdminLogin() {
 }
 
 export default AdminLogin;
+
+export async function getServerSideProps(context) {
+	const user = await handleSession({
+		req: context.req,
+		authLevel: ["admin"],
+	});
+
+	if (user) {
+		return {
+			redirect: {
+				destination: "/admin/dashboard",
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: {},
+	};
+}
