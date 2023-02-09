@@ -13,6 +13,7 @@ import DepartmentModel from "../../models/department";
 import CollegeModel from "../../models/college";
 import SessionModel from "../../models/session";
 import handleSession from "../../session/handle-session";
+import { stringifyDoc } from "../../lib";
 
 import getRegistrationLevel from "../../lib/get-registration-level";
 
@@ -260,7 +261,7 @@ export async function getServerSideProps(context) {
 				fullname: `${user.firstname} ${user.lastname}`,
 				passport: user?.passport || "default.jpg",
 			},
-			profile: profile || null,
+			profile: stringifyDoc(profile) || null,
 			college: {
 				name: userCollege?.name || "undefined",
 				abbr: userCollege?.abbr || "undefined",

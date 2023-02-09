@@ -1,9 +1,10 @@
 import formidable from "formidable";
-import { handleSession } from "../../../session/handle-session";
+import handleSession from "../../../session/handle-session";
 // import CategoryModel from "../../../models/category";
-import FoodModel from "../../../../models/food";
+import ProfileModel from "../../../models/profile";
 import { saveFile } from "../../../lib";
 import { STUDENT_LEVEL } from "../../../auth_constants/auth";
+import { STATE_OF_ORIGIN_FOLDER } from "../../../constants";
 
 export const config = {
 	api: {
@@ -33,22 +34,22 @@ async function handler(req, res) {
 				});
 			});
 
-			// console.log(productId);
+			const file = fData.files.img;
+			// console.log({ fData });
+			const filename = await saveFile(file, STATE_OF_ORIGIN_FOLDER);
 
-			const files = [];
+			await ProfileModel.findOneAndUpdate(
+				{ _userId: user.id },
+				{
+					soproof: filename,
+				}
+			);
 
-			for (const img in fData.files) {
-				const file = fData.files[img];
-				const filename = await saveFile(file);
-
-				await FoodModel.findByIdAndUpdate(productId, {
-					$addToSet: { images: filename },
-				});
-				files.push(filename);
-				// console.log(file);
-			}
-
-			res.status(200).json({ ok: true, msg: "nice", files });
+			res.status(200).json({
+				ok: true,
+				msg: "uploaded successfully",
+				file: filename,
+			});
 		} catch (error) {
 			res.status(401).json({ ok: false, msg: error.message });
 		}
@@ -58,4 +59,4 @@ async function handler(req, res) {
 	}
 }
 
-export default withSessionRoute(handler);
+export default handler;
