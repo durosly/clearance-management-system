@@ -6,6 +6,8 @@ import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
 import UserWrapper from "../components/layout/user-wrapper";
 
+import handleSession from "../session/handle-session";
+
 function Payments() {
 	return (
 		<UserWrapper>
@@ -61,3 +63,25 @@ function Payments() {
 }
 
 export default Payments;
+
+export async function getServerSideProps(context) {
+	const user = await handleSession({
+		req: context.req,
+		authLevel: ["student"],
+	});
+
+	if (!user) {
+		return {
+			redirect: {
+				destination: "/",
+				permanent: false,
+			},
+		};
+	}
+
+	return {
+		props: {
+			user: JSON.parse(JSON.stringify(user)),
+		},
+	};
+}

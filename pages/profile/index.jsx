@@ -108,7 +108,7 @@ function Profile({
 									now={45}
 								/>
 
-								<Link href="/nice">Complete payment</Link>
+								<Link href="/payments">Complete payment</Link>
 							</Card.Body>
 						</Card>
 					</Col>
