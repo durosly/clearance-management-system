@@ -6,7 +6,9 @@ import Alert from "react-bootstrap/Alert";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
+import Modal from "react-bootstrap/Modal";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { GrEdit } from "react-icons/gr";
 import AdminLayout from "../../../components/admin/layout/admin-layout";
 import handleSession from "../../../session/handle-session";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
@@ -19,6 +21,10 @@ function Session({ sessionsDB }) {
 		title: "",
 		year: "",
 	});
+
+	const [showModal, setShowModal] = useState(false);
+	const [edit, setEdit] = useState({ title: "", id: "", level: "" });
+	const [isEditing, setIsEditing] = useState(false);
 
 	const [sessions, setSessions] = useState(sessionsDB);
 	const [isLoading, setIsLoading] = useState(false);
@@ -69,13 +75,13 @@ function Session({ sessionsDB }) {
 			});
 		}
 	}
-	async function deleteDepartment(id) {
+	async function deleteSession(id) {
 		if (isDeleting) return;
 		setIsDeleting(true);
 		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
 
 		try {
-			const response = await axios.delete(`/api/department/${id}/delete`);
+			const response = await axios.delete(`/api/session/${id}/delete`);
 
 			if (response.data.ok) {
 				setShowAlert({
@@ -84,11 +90,9 @@ function Session({ sessionsDB }) {
 					msg: "Department Removed",
 				});
 
-				const newDepartmentSet = departments.filter(
-					(c) => c._id !== id
-				);
+				const newSessionSet = sessions.filter((c) => c._id !== id);
 
-				setDepartments([...newDepartmentSet]);
+				setSessions([...newSessionSet]);
 				// setNewDepartment("");
 				// setNewDepartmentAbbr("");
 				setIsDeleting(false);
@@ -106,6 +110,61 @@ function Session({ sessionsDB }) {
 				msg: error.message,
 			});
 		}
+	}
+	async function handleEdit(e) {
+		e.preventDefault();
+		if (isEditing) return;
+		setIsEditing(true);
+
+		// console.log({ edit });
+
+		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
+
+		try {
+			const response = await axios.put(
+				`/api/session/${edit.id}/edit`,
+				edit
+			);
+
+			if (response.data.ok) {
+				setShowAlert({
+					show: true,
+					type: "success",
+					msg: "update successful",
+				});
+
+				const newSessionSet = sessions.map((c) => {
+					if (c._id === edit.id) {
+						c.level = edit.level;
+					}
+
+					return c;
+				});
+
+				setSessions([...newSessionSet]);
+				setEdit({ title: "", id: "", level: "" });
+				setShowModal(false);
+
+				setIsEditing(false);
+			} else {
+				throw new Error(response.error);
+			}
+
+			// console.log(response);
+			// setIsLoading(false);
+		} catch (error) {
+			setIsEditing(false);
+			setShowAlert({
+				show: true,
+				type: "danger",
+				msg: error.message,
+			});
+		}
+	}
+
+	function editSession(id, title, level) {
+		setEdit({ id, title, level });
+		setShowModal(true);
 	}
 
 	return (
@@ -201,10 +260,21 @@ function Session({ sessionsDB }) {
 									<td>{c.level}</td>
 									<td>
 										<Button
-											disabled={isDeleting}
+											className="me-2"
+											variant="info"
 											onClick={() =>
-												deleteDepartment(c._id)
+												editSession(
+													c._id,
+													c.title,
+													c.level
+												)
 											}
+										>
+											<GrEdit />
+										</Button>
+										<Button
+											disabled={isDeleting}
+											onClick={() => deleteSession(c._id)}
 											variant="danger"
 										>
 											<FaRegTrashAlt />
@@ -216,6 +286,56 @@ function Session({ sessionsDB }) {
 					</Table>
 				</Col>
 			</Row>
+
+			<Modal
+				show={showModal}
+				onHide={() => setShowModal(false)}
+				size="md"
+				aria-labelledby="contained-modal-title-vcenter"
+				centered
+			>
+				<Modal.Header closeButton>
+					<Modal.Title id="contained-modal-title-vcenter">
+						Update {edit.title} session Level
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form
+						onSubmit={handleEdit}
+						className="w-75 md:w-50 mx-auto"
+					>
+						<Form.Group>
+							<Form.Select
+								aria-label="Default select example"
+								value={edit.level}
+								onChange={(e) =>
+									setEdit({
+										...edit,
+										level: e.target.value,
+									})
+								}
+							>
+								<option disabled>-- select level --</option>
+								<option value="100">100</option>
+								<option value="200">200</option>
+								<option value="300">300</option>
+								<option value="400">400</option>
+								<option value="500">500</option>
+							</Form.Select>
+						</Form.Group>
+						<Button
+							disabled={isEditing}
+							type="submit"
+							variant="primary"
+						>
+							Save
+						</Button>
+					</Form>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button onClick={() => setShowModal(false)}>Close</Button>
+				</Modal.Footer>
+			</Modal>
 		</AdminLayout>
 	);
 }

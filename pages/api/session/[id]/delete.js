@@ -1,9 +1,10 @@
-import SessionModel from "../../../models/session";
-import handleSession from "../../../session/handle-session";
-import { ADMIN_LEVEL } from "../../../auth_constants/auth";
+// import CollegeModel from "../../../../models/college";
+import SessionModel from "../../../../models/session";
+import handleSession from "../../../../session/handle-session";
+import { ADMIN_LEVEL } from "../../../../auth_constants/auth";
 
 async function handler(req, res) {
-	if (req.method === "POST") {
+	if (req.method === "DELETE") {
 		try {
 			const user = await handleSession({
 				req,
@@ -12,18 +13,11 @@ async function handler(req, res) {
 
 			if (!user) throw new Error("Unathorized");
 
-			const { title, year } = req.body;
+			const { id } = req.query;
 
-			if (!title) {
-				throw new Error("Enter title of session");
-			} else if (!year) {
-				throw new Error("Enter year of admission");
-			}
-			const session = await SessionModel.create({
-				title,
-				year,
-				level: 100,
-			});
+			const session = await SessionModel.findByIdAndDelete(id);
+
+			// await ProfileModel.create({ _userId: newUser.id });
 
 			// await user.save();
 			res.status(200).json({ ok: true, msg: "Success", session });
