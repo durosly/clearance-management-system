@@ -1,4 +1,4 @@
-// import CollegeModel from "../../../models/college";
+import CollegeModel from "../../../models/college";
 import DepartmentModel from "../../../models/department";
 import handleSession from "../../../session/handle-session";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
@@ -20,14 +20,23 @@ async function handler(req, res) {
 			} else if (!abbr) {
 				throw new Error("Enter college abbrevation");
 			}
-			const department = await DepartmentModel.create({
+			const departmentDB = await DepartmentModel.create({
 				name,
 				abbr,
 				_collegeId: college,
 				duration,
 			});
 
+			const collegeDB = CollegeModel.findById(college);
 			// await ProfileModel.create({ _userId: newUser.id });
+
+			const department = {
+				_id: departmentDB._id,
+				name: departmentDB.name,
+				abbr: departmentDB.abbr,
+				duration: departmentDB.duration,
+				college_name: collegeDB.name,
+			};
 
 			// await user.save();
 			res.status(200).json({ ok: true, msg: "Success", department });

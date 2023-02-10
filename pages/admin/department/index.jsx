@@ -20,7 +20,7 @@ function Department({ departmentDB, collegesDB }) {
 		name: "",
 		college: "",
 		abbr: "",
-		duration: undefined,
+		duration: "",
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -74,13 +74,13 @@ function Department({ departmentDB, collegesDB }) {
 			});
 		}
 	}
-	async function deleteCollege(id) {
+	async function deleteDepartment(id) {
 		if (isDeleting) return;
 		setIsDeleting(true);
 		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
 
 		try {
-			const response = await axios.delete(`/api/college/${id}/delete`);
+			const response = await axios.delete(`/api/department/${id}/delete`);
 
 			if (response.data.ok) {
 				setShowAlert({
@@ -253,7 +253,9 @@ function Department({ departmentDB, collegesDB }) {
 									<td>
 										<Button
 											disabled={isDeleting}
-											onClick={() => deleteCollege(c._id)}
+											onClick={() =>
+												deleteDepartment(c._id)
+											}
 											variant="danger"
 										>
 											<FaRegTrashAlt />
