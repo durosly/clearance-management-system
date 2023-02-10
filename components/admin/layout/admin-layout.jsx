@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Container from "react-bootstrap/Container";
+import { FaSchool } from "react-icons/fa";
 import ScrewdriverWrench from "../../icons/screw-driver-wrench";
 import ChartLine from "../../icons/chart-line";
 import BuildingColumns from "../../icons/building-columns";
@@ -96,6 +97,25 @@ function AdminLayout({ children }) {
 											className="me-2"
 										/>
 										College
+									</Link>
+								</li>
+								<li>
+									<Link
+										href="/admin/department"
+										className={`nav-link ${
+											router.pathname ===
+											"/admin/department"
+												? "active"
+												: "link-dark"
+										} `}
+									>
+										<FaSchool
+											width={16}
+											height={16}
+											fill="currentColor"
+											className="me-2"
+										/>
+										Department
 									</Link>
 								</li>
 								<li>
