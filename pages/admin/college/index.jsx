@@ -17,11 +17,12 @@ function College({ collegesDB }) {
 	const [newCollege, setNewCollege] = useState("");
 	const [newCollegeAbbr, setNewCollegeAbbr] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
 	const [colleges, setColleges] = useState(collegesDB);
 	const [showAlert, setShowAlert] = useState({
 		show: false,
-		type: "success",
-		msg: "nice",
+		type: "",
+		msg: "",
 	});
 
 	async function handleSubmit(e) {
@@ -43,7 +44,8 @@ function College({ collegesDB }) {
 				});
 
 				setColleges([...colleges, response.data.college]);
-
+				setNewCollege("");
+				setNewCollegeAbbr("");
 				setIsLoading(false);
 			} else {
 				throw new Error(response.error);
@@ -53,6 +55,42 @@ function College({ collegesDB }) {
 			// setIsLoading(false);
 		} catch (error) {
 			setIsLoading(false);
+			setShowAlert({
+				show: true,
+				type: "danger",
+				msg: error.message,
+			});
+		}
+	}
+	async function deleteCollege(id) {
+		if (isDeleting) return;
+		setIsDeleting(true);
+		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
+
+		try {
+			const response = await axios.delete(`/api/college/${id}/delete`);
+
+			if (response.data.ok) {
+				setShowAlert({
+					show: true,
+					type: "success",
+					msg: "College Removed",
+				});
+
+				const newCollegeSet = colleges.filter((c) => c._id !== id);
+
+				setColleges([...newCollegeSet]);
+				setNewCollege("");
+				setNewCollegeAbbr("");
+				setIsDeleting(false);
+			} else {
+				throw new Error(response.error);
+			}
+
+			// console.log(response);
+			// setIsLoading(false);
+		} catch (error) {
+			setIsDeleting(false);
 			setShowAlert({
 				show: true,
 				type: "danger",
@@ -129,7 +167,7 @@ function College({ collegesDB }) {
 								<th>#</th>
 								<th>Name</th>
 								<th>Abbr</th>
-								<th>Number of departments</th>
+								{/* <th>Number of departments</th> */}
 								<th></th>
 							</tr>
 						</thead>
@@ -139,9 +177,13 @@ function College({ collegesDB }) {
 									<td>{i + 1}</td>
 									<td>{c.name}</td>
 									<td>{c.abbr}</td>
-									<td>{10}</td>
+									{/* <td>{10}</td> */}
 									<td>
-										<Button variant="danger">
+										<Button
+											disabled={isDeleting}
+											onClick={() => deleteCollege(c._id)}
+											variant="danger"
+										>
 											<FaRegTrashAlt />
 										</Button>
 									</td>
