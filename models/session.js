@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema({
 	title: String,
-	level: Number,
+	level: { type: Number, default: 100 },
+	year: String,
 	created_at: { type: Date, default: Date.now },
 });
 
