@@ -8,6 +8,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import Container from "react-bootstrap/Container";
 import { FaSchool } from "react-icons/fa";
 import { TbSchool } from "react-icons/tb";
+import { RiSecurePaymentLine } from "react-icons/ri";
 import ScrewdriverWrench from "../../icons/screw-driver-wrench";
 import ChartLine from "../../icons/chart-line";
 import BuildingColumns from "../../icons/building-columns";
@@ -135,6 +136,25 @@ function AdminLayout({ children }) {
 											className="me-2"
 										/>
 										Session
+									</Link>
+								</li>
+								<li>
+									<Link
+										href="/admin/payments"
+										className={`nav-link ${
+											router.pathname ===
+											"/admin/payments"
+												? "active"
+												: "link-dark"
+										} `}
+									>
+										<RiSecurePaymentLine
+											width={16}
+											height={16}
+											fill="currentColor"
+											className="me-2"
+										/>
+										Payments
 									</Link>
 								</li>
 								<li>
