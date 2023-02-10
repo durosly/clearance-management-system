@@ -1,10 +1,19 @@
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Container from "react-bootstrap/Container";
+import ScrewdriverWrench from "../../icons/screw-driver-wrench";
+import ChartLine from "../../icons/chart-line";
+import BuildingColumns from "../../icons/building-columns";
 
 function AdminLayout({ children }) {
+	const router = useRouter();
+
+	console.log(router.pathname);
 	const [show, setShow] = useState(false);
 
 	const handleClose = () => setShow(false);
@@ -24,26 +33,22 @@ function AdminLayout({ children }) {
 							className="d-flex flex-column flex-shrink-0 p-3 bg-light min-vh-100"
 							style={{ width: "280px" }}
 						>
-							<a
-								href="/"
+							<Link
+								href="/admin/dashboard"
 								className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
 							>
-								<svg
-									className="bi pe-none me-2"
+								<ScrewdriverWrench
 									width={40}
 									height={32}
-								>
-									<use xlinkHref="#bootstrap" />
-								</svg>
-								<span className="fs-4">Sidebar</span>
-							</a>
+								/>
+								<span className="fs-4">Admin Area</span>
+							</Link>
 							<hr />
 							<ul className="nav nav-pills flex-column mb-auto">
-								<li className="nav-item">
+								{/* <li className="nav-item">
 									<a
 										href="#"
-										className="nav-link active"
-										aria-current="page"
+										
 									>
 										<svg
 											className="bi pe-none me-2"
@@ -54,36 +59,44 @@ function AdminLayout({ children }) {
 										</svg>
 										Home
 									</a>
-								</li>
+								</li> */}
 								<li>
-									<a
-										href="#"
-										className="nav-link link-dark"
+									<Link
+										href="/admin/dashboard"
+										className={`nav-link ${
+											router.pathname ===
+											"/admin/dashboard"
+												? "active"
+												: "link-dark"
+										} `}
+										aria-current="page"
 									>
-										<svg
-											className="bi pe-none me-2"
+										<ChartLine
 											width={16}
 											height={16}
-										>
-											<use xlinkHref="#speedometer2" />
-										</svg>
+											fill="currentColor"
+											className="me-2"
+										/>
 										Dashboard
-									</a>
+									</Link>
 								</li>
 								<li>
-									<a
-										href="#"
-										className="nav-link link-dark"
+									<Link
+										href="/admin/college"
+										className={`nav-link ${
+											router.pathname === "/admin/college"
+												? "active"
+												: "link-dark"
+										} `}
 									>
-										<svg
-											className="bi pe-none me-2"
+										<BuildingColumns
 											width={16}
 											height={16}
-										>
-											<use xlinkHref="#table" />
-										</svg>
-										Orders
-									</a>
+											fill="currentColor"
+											className="me-2"
+										/>
+										College
+									</Link>
 								</li>
 								<li>
 									<a
@@ -175,7 +188,7 @@ function AdminLayout({ children }) {
 					</Offcanvas.Body>
 				</Offcanvas>
 
-				<div>
+				<div className="flex-grow-1">
 					<Row>
 						<Col xs="auto">
 							<Button
@@ -186,7 +199,9 @@ function AdminLayout({ children }) {
 								Launch
 							</Button>
 						</Col>
-						<Col md={12}>{children}</Col>
+						<Col md={12}>
+							<Container>{children}</Container>
+						</Col>
 					</Row>
 				</div>
 			</div>
