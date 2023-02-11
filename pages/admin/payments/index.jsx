@@ -15,18 +15,20 @@ import { ADMIN_LEVEL } from "../../../auth_constants/auth";
 import SessionModel from "../../../models/session";
 import CollegeModel from "../../../models/college";
 import DepartmentModel from "../../../models/department";
+import PaymentListModel from "../../../models/payment-list";
 import { stringifyDoc } from "../../../lib";
 
-function Payments({ sessionsDB, departmentsDB, collegesDB }) {
+function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 	// console.table(departmentDB);
 
 	const [payment, setPayment] = useState({
 		title: "",
 		amount: "",
-		college: "",
-		department: "",
+		college: "all",
+		department: "all",
 		session: "",
 	});
+	const [payments, setPayments] = useState(paymentsDB);
 
 	const [newSession, setNewSession] = useState({
 		title: "",
@@ -39,7 +41,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB }) {
 
 	const [sessions, setSessions] = useState(sessionsDB);
 	const [departments, setDepartments] = useState([]);
-	const [colleges, setColleges] = useState(collegesDB);
+	const [colleges] = useState(collegesDB);
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -55,22 +57,22 @@ function Payments({ sessionsDB, departmentsDB, collegesDB }) {
 		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
 
 		try {
-			const response = await axios.post(
-				"/api/session/create",
-				newSession
-			);
+			const response = await axios.post("/api/payments/create", payment);
 
 			if (response.data.ok) {
 				setShowAlert({
 					show: true,
 					type: "success",
-					msg: "Session created",
+					msg: "Payment created",
 				});
 
-				setSessions([...sessions, response.data.session]);
-				setNewSession({
+				setPayments([...payments, response.data.payment]);
+				setPayment({
 					title: "",
-					year: "",
+					amount: "",
+					college: "all",
+					department: "all",
+					session: "",
 				});
 				// setNewDepartmentAbbr("");
 				setIsLoading(false);
@@ -81,11 +83,19 @@ function Payments({ sessionsDB, departmentsDB, collegesDB }) {
 			// console.log(response);
 			// setIsLoading(false);
 		} catch (error) {
+			console.log(error);
+			let err = "";
+
+			if (error?.response) {
+				err = error.response.data.msg;
+			} else {
+				err = error.message;
+			}
 			setIsLoading(false);
 			setShowAlert({
 				show: true,
 				type: "danger",
-				msg: error.message,
+				msg: err,
 			});
 		}
 	}
@@ -292,12 +302,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB }) {
 								name="college"
 								onChange={handleCollegeChange}
 							>
-								<option
-									disabled
-									selected
-								>
-									-- select college --
-								</option>
+								<option value="all">-- all --</option>
 								{colleges.map((c) => (
 									<option
 										key={c._id}
@@ -324,12 +329,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB }) {
 									})
 								}
 							>
-								<option
-									disabled
-									selected
-								>
-									-- select department --
-								</option>
+								<option value="all">-- all --</option>
 								{departments.map((c) => (
 									<option
 										key={c._id}
@@ -473,12 +473,14 @@ export async function getServerSideProps(context) {
 	const sessions = await SessionModel.find({});
 	const colleges = await CollegeModel.find({});
 	const departments = await DepartmentModel.find({});
+	const payments = await PaymentListModel.find({});
 
 	return {
 		props: {
 			sessionsDB: stringifyDoc(sessions),
 			collegesDB: stringifyDoc(colleges),
 			departmentsDB: stringifyDoc(departments),
+			paymentsDB: stringifyDoc(payments),
 		},
 	};
 }
