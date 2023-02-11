@@ -42,7 +42,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 	});
 	const [isEditing, setIsEditing] = useState(false);
 
-	const [sessions, setSessions] = useState(sessionsDB);
+	const [sessions] = useState(sessionsDB);
 	const [departments, setDepartments] = useState([]);
 	const [colleges] = useState(collegesDB);
 
