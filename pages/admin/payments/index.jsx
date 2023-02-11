@@ -105,30 +105,24 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 	async function deleteSession(id) {
 		if (isDeleting) return;
 		setIsDeleting(true);
-		// setShowAlert({ show: true, type: "warning", msg: "submitting..." });
 
 		try {
-			const response = await axios.delete(`/api/session/${id}/delete`);
+			const response = await axios.delete(`/api/payments/${id}/delete`);
 
 			if (response.data.ok) {
 				setShowAlert({
 					show: true,
 					type: "success",
-					msg: "Department Removed",
+					msg: "Payment item Removed",
 				});
 
-				const newSessionSet = sessions.filter((c) => c._id !== id);
+				const newPaymentSet = payments.filter((c) => c._id !== id);
 
-				setSessions([...newSessionSet]);
-				// setNewDepartment("");
-				// setNewDepartmentAbbr("");
+				setPayments([...newPaymentSet]);
 				setIsDeleting(false);
 			} else {
 				throw new Error(response.error);
 			}
-
-			// console.log(response);
-			// setIsLoading(false);
 		} catch (error) {
 			setIsDeleting(false);
 			setShowAlert({
