@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import { FaSchool } from "react-icons/fa";
 import { TbSchool } from "react-icons/tb";
 import { RiSecurePaymentLine } from "react-icons/ri";
+import { FaBook } from "react-icons/fa";
 import ScrewdriverWrench from "../../icons/screw-driver-wrench";
 import ChartLine from "../../icons/chart-line";
 import BuildingColumns from "../../icons/building-columns";
@@ -155,6 +156,24 @@ function AdminLayout({ children }) {
 											className="me-2"
 										/>
 										Payments
+									</Link>
+								</li>
+								<li>
+									<Link
+										href="/admin/courses"
+										className={`nav-link ${
+											router.pathname === "/admin/courses"
+												? "active"
+												: "link-dark"
+										} `}
+									>
+										<FaBook
+											width={16}
+											height={16}
+											fill="currentColor"
+											className="me-2"
+										/>
+										Courses
 									</Link>
 								</li>
 								<li>
