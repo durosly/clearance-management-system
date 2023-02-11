@@ -1,5 +1,6 @@
 import PaymentListModel from "../../../models/payment-list";
 import handleSession from "../../../session/handle-session";
+import { getFullPaymentData } from "../../../lib";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
 
 async function handler(req, res) {
@@ -34,8 +35,14 @@ async function handler(req, res) {
 				_sessionId: session,
 			});
 
+			const fullData = await getFullPaymentData(payment);
+
 			// await user.save();
-			res.status(200).json({ ok: true, msg: "Success", payment });
+			res.status(200).json({
+				ok: true,
+				msg: "Success",
+				payment: fullData,
+			});
 		} catch (error) {
 			console.log(error.message);
 			res.status(401).json({ ok: false, msg: error.message });

@@ -17,6 +17,7 @@ import CollegeModel from "../../../models/college";
 import DepartmentModel from "../../../models/department";
 import PaymentListModel from "../../../models/payment-list";
 import { stringifyDoc } from "../../../lib";
+import { getFullPaymentsData } from "../../../lib";
 
 function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 	// console.table(departmentDB);
@@ -30,13 +31,15 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 	});
 	const [payments, setPayments] = useState(paymentsDB);
 
-	const [newSession, setNewSession] = useState({
-		title: "",
-		year: "",
-	});
-
 	const [showModal, setShowModal] = useState(false);
-	const [edit, setEdit] = useState({ title: "", id: "", level: "" });
+	const [edit, setEdit] = useState({
+		title: "",
+		id: "",
+		session: "",
+		department: "",
+		college: "",
+		amount: "",
+	});
 	const [isEditing, setIsEditing] = useState(false);
 
 	const [sessions, setSessions] = useState(sessionsDB);
@@ -146,7 +149,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 
 		try {
 			const response = await axios.put(
-				`/api/session/${edit.id}/edit`,
+				`/api/payments/${edit.id}/edit`,
 				edit
 			);
 
@@ -157,16 +160,23 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 					msg: "update successful",
 				});
 
-				const newSessionSet = sessions.map((c) => {
+				const newPaymentSet = payments.map((c) => {
 					if (c._id === edit.id) {
-						c.level = edit.level;
+						return response.data.payment;
 					}
 
 					return c;
 				});
 
-				setSessions([...newSessionSet]);
-				setEdit({ title: "", id: "", level: "" });
+				setPayments([...newPaymentSet]);
+				setEdit({
+					title: "",
+					id: "",
+					session: "",
+					department: "",
+					college: "",
+					amount: "",
+				});
 				setShowModal(false);
 
 				setIsEditing(false);
@@ -186,8 +196,8 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 		}
 	}
 
-	function editSession(id, title, level) {
-		setEdit({ id, title, level });
+	function editPayment(id, title, session, department, college, amount) {
+		setEdit({ id, title, session, department, college, amount });
 		setShowModal(true);
 	}
 
@@ -359,27 +369,34 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 							<tr>
 								<th>#</th>
 								<th>Title</th>
-								<th>Year</th>
-								<th>Level</th>
+								<th>Amount</th>
+								<th>Session</th>
+								<th>College</th>
+								<th>Department</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
-							{sessions.map((c, i) => (
+							{payments.map((c, i) => (
 								<tr key={c._id}>
 									<td>{i + 1}</td>
 									<td>{c.title}</td>
-									<td>{c.year}</td>
-									<td>{c.level}</td>
+									<td>{c.amount}</td>
+									<td>{c.session}</td>
+									<td>{c.college}</td>
+									<td>{c.department}</td>
 									<td>
 										<Button
 											className="me-2"
 											variant="info"
 											onClick={() =>
-												editSession(
+												editPayment(
 													c._id,
 													c.title,
-													c.level
+													c.session,
+													c.department,
+													c.college,
+													c.amount
 												)
 											}
 										>
@@ -409,7 +426,7 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 			>
 				<Modal.Header closeButton>
 					<Modal.Title id="contained-modal-title-vcenter">
-						Update {edit.title} session Level
+						Update {edit.title} for {edit.session}
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
@@ -417,24 +434,26 @@ function Payments({ sessionsDB, departmentsDB, collegesDB, paymentsDB }) {
 						onSubmit={handleEdit}
 						className="w-75 md:w-50 mx-auto"
 					>
-						<Form.Group>
-							<Form.Select
-								aria-label="Default select example"
-								value={edit.level}
+						<p>College: {edit.college}</p>
+						<p>Department: {edit.department}</p>
+						<Form.Group
+							className="mb-3"
+							controlId="college-abbr"
+						>
+							<Form.Label>Payment Fee</Form.Label>
+							<Form.Control
+								type="number"
+								placeholder="amount..."
+								name="amount"
+								inputMode="numeric"
+								value={edit.amount}
 								onChange={(e) =>
 									setEdit({
 										...edit,
-										level: e.target.value,
+										amount: e.target.value,
 									})
 								}
-							>
-								<option disabled>-- select level --</option>
-								<option value="100">100</option>
-								<option value="200">200</option>
-								<option value="300">300</option>
-								<option value="400">400</option>
-								<option value="500">500</option>
-							</Form.Select>
+							/>
 						</Form.Group>
 						<Button
 							disabled={isEditing}
@@ -473,7 +492,9 @@ export async function getServerSideProps(context) {
 	const sessions = await SessionModel.find({});
 	const colleges = await CollegeModel.find({});
 	const departments = await DepartmentModel.find({});
-	const payments = await PaymentListModel.find({});
+	const paymentsQuery = await PaymentListModel.find({});
+
+	const payments = await getFullPaymentsData(paymentsQuery);
 
 	return {
 		props: {
