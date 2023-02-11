@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -73,7 +74,15 @@ function Courses({ departmentDB }) {
 						onSubmit={handleSubmit}
 						className="w-75 md:w-50 mx-auto"
 					>
-						<h2>Add Department</h2>
+						<div>
+							<h2>Add Department</h2>
+							<Link
+								className="btn btn-primary"
+								href="/admin/courses/departments"
+							>
+								Courses
+							</Link>
+						</div>
 						<Alert
 							// className="mt-5"
 							show={showAlert.show}

@@ -33,7 +33,7 @@ async function handler(req, res) {
 				code,
 				unit,
 				semester,
-				department,
+				_departmentId: department,
 				level,
 			});
 
