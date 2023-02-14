@@ -88,25 +88,10 @@ export async function getServerSideProps(context) {
 	}
 
 	const profilesDB = await ProfileModel.find({
-		$gte: { clearanceLevel: 0 },
-		$lte: { clearanceLevel: 2 },
+		// $gte: { clearanceLevel: 0 },
+		clearanceLevel: { $gte: 0, $lte: 2 },
+		// $lte: { clearanceLevel: 2 },
 	}).sort("-clearanceLevel");
-	// console.log(profilesDB);
-	// const departmentDB = await DepartmentModel.find({});
-
-	// const department = [];
-
-	// for (const dept of departmentDB) {
-	// 	const college = await CollegeModel.findById(dept._collegeId);
-
-	// 	department.push({
-	// 		_id: dept._id,
-	// 		name: dept.name,
-	// 		duration: dept.duration,
-	// 		abbr: dept.abbr,
-	// 		college_name: college.name,
-	// 	});
-	// }
 
 	return {
 		props: {
