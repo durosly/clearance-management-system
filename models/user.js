@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
 	email: String,
 	password: String,
 	passport: { type: String, default: "default.jpg" },
+	gender: { type: String, enum: ["male", "female"] },
 	is_admin: { type: Boolean, default: false },
 	type: {
 		type: String,

@@ -6,7 +6,7 @@ async function handler(req, res) {
 		try {
 			mongoose.connect(process.env.MONGODB_URL);
 
-			const { email, firstname, middlename, lastname, password } =
+			const { email, firstname, middlename, lastname, password, gender } =
 				req.body;
 
 			if (!email) {
@@ -17,6 +17,8 @@ async function handler(req, res) {
 				throw new Error("Last name cannot be empty");
 			} else if (!password) {
 				throw new Error("Password cannot be empty");
+			} else if (!gender) {
+				throw new Error("Select your gender");
 			}
 
 			const alreadyExist = await UserModel.findOne({
@@ -30,6 +32,7 @@ async function handler(req, res) {
 				email,
 				password,
 				lastname,
+				gender,
 			});
 
 			// await ProfileModel.create({ _userId: newUser.id });

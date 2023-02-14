@@ -19,6 +19,7 @@ function Register() {
 		lastname: "",
 		email: "",
 		password: "",
+		gender: "",
 	});
 
 	async function handleSubmit(e) {
@@ -140,6 +141,48 @@ function Register() {
 					/>
 					<label htmlFor="email">Email address</label>
 				</div>
+
+				<div>
+					<p>Gender</p>
+					<div className="form-check form-check-inline">
+						<input
+							className="form-check-input"
+							type="checkbox"
+							id="inlineCheckbox1"
+							defaultValue="option1"
+							name="gender"
+							checked={profile.gender === "male"}
+							onChange={() =>
+								setProfile({ ...profile, gender: "male" })
+							}
+						/>
+						<label
+							className="form-check-label"
+							htmlFor="inlineCheckbox1"
+						>
+							Male
+						</label>
+					</div>
+					<div className="form-check form-check-inline">
+						<input
+							className="form-check-input"
+							type="checkbox"
+							id="inlineCheckbox2"
+							name="gender"
+							checked={profile.gender === "female"}
+							onChange={() =>
+								setProfile({ ...profile, gender: "female" })
+							}
+						/>
+						<label
+							className="form-check-label"
+							htmlFor="inlineCheckbox2"
+						>
+							Female
+						</label>
+					</div>
+				</div>
+
 				<div className="form-floating">
 					<input
 						type="password"
