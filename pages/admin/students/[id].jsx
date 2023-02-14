@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 import ProfileModel from "../../../models/profile";
 import { stringifyDoc } from "../../../lib";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
@@ -15,6 +18,7 @@ import { Badge, Button, Col, FloatingLabel, Image, Row } from "react-bootstrap";
 import { FaEye } from "react-icons/fa";
 import Link from "next/link";
 import Form from "react-bootstrap/Form";
+import { toast } from "react-toastify";
 
 function StudentProfile({
 	user,
@@ -25,6 +29,38 @@ function StudentProfile({
 	departments,
 	colleges,
 }) {
+	const router = useRouter();
+	const { id } = router.query;
+	const [status, setStatus] = useState(profile?.status || "pending");
+	const [isUpdating, setIsUpdating] = useState(false);
+
+	const date = new Date(profile?.dob || Date.now);
+
+	async function updateStatus(e) {
+		e.preventDefault();
+
+		if (isUpdating) return;
+		setIsUpdating(true);
+		try {
+			const response = await axios.put(
+				`/api/profile/${id}/update-status`,
+				{
+					status,
+				}
+			);
+
+			if (response.data.ok) {
+				toast.success("Status updated");
+				router.reload();
+			} else {
+				setIsUpdating(false);
+				throw new Error(response.data.msg);
+			}
+		} catch (error) {
+			setIsUpdating(false);
+			toast.error(error.message);
+		}
+	}
 	return (
 		<AdminLayout>
 			<Row>
@@ -74,8 +110,11 @@ function StudentProfile({
 							{(profile && profile?.status) || "Pending..."}
 						</Badge>
 					</p>
-					<Form>
-						<Form.Select>
+					<Form onSubmit={updateStatus}>
+						<Form.Select
+							value={status}
+							onChange={(e) => setStatus(e.target.value)}
+						>
 							<option value="pending">Pending</option>
 							<option value="in-school">In-school</option>
 							<option value="out-of-school">Out-of-school</option>
@@ -84,13 +123,19 @@ function StudentProfile({
 						<Button
 							type="submit"
 							variant="info"
+							disabled={isUpdating}
 						>
-							Update
+							{isUpdating ? "Loading..." : "Update"}
 						</Button>
 					</Form>
 					<p>
 						<b className="me-2">Date of birth:</b>
-						{(profile && profile?.dob) || "undefined"}
+						{(profile &&
+							profile?.dob &&
+							`${date.getDate()}-${
+								date.getMonth() + 1
+							}-${date.getFullYear()}`) ||
+							"undefined"}
 						{profile && profile?.birthcertificate && (
 							<Link
 								className="ms-2"
