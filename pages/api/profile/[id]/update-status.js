@@ -19,7 +19,10 @@ async function handler(req, res) {
 				throw new Error("Please, select a status");
 			}
 
-			await ProfileModel.findByIdAndUpdate(id, { status });
+			await ProfileModel.findByIdAndUpdate(id, {
+				status,
+				clearanceLevel: 3,
+			});
 
 			res.status(200).json({ ok: true, msg: "Success" });
 		} catch (error) {

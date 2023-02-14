@@ -29,6 +29,7 @@ async function handler(req, res) {
 				_collegeId: college,
 				_departmentId: department,
 				_sessionId: lastSession.id,
+				clearanceLevel: 4,
 			});
 
 			res.status(200).json({ ok: true, msg: "Success" });

@@ -54,6 +54,7 @@ function StudentProfile({
 			if (response.data.ok) {
 				toast.success("Status updated");
 				// router.reload();
+				setIsUpdating(false);
 			} else {
 				setIsUpdating(false);
 				throw new Error(response.data.msg);
@@ -81,6 +82,7 @@ function StudentProfile({
 			if (response.data.ok) {
 				toast.success("Status updated");
 				// router.reload();
+				setIsUpdating(false);
 			} else {
 				setIsUpdating(false);
 				throw new Error(response.data.msg);
@@ -93,7 +95,9 @@ function StudentProfile({
 	return (
 		<AdminLayout>
 			<Row>
-				<Col>Student profile</Col>
+				<Col>
+					<h1>Student profile</h1>
+				</Col>
 			</Row>
 			<Row>
 				<Col>
@@ -115,7 +119,7 @@ function StudentProfile({
 					</p>
 					<p>
 						<b className="me-2">Level:</b>
-						{user?.level || "undefined"}
+						{userSession?.level || "undefined"}
 					</p>
 					<p>
 						<b className="me-2">Jamb Reg Number:</b>
@@ -216,7 +220,7 @@ function StudentProfile({
 					</p>
 					<p>
 						<b className="me-2">Clearance Level:</b>
-						{(college && college?.localofresidence) || "undefined"}
+						{(profile && profile?.clearanceLevel) || "undefined"}
 					</p>
 				</Col>
 			</Row>
