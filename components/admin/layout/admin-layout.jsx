@@ -10,6 +10,7 @@ import { FaSchool } from "react-icons/fa";
 import { TbSchool } from "react-icons/tb";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import { FaBook } from "react-icons/fa";
+import { BsFillPeopleFill } from "react-icons/bs";
 import ScrewdriverWrench from "../../icons/screw-driver-wrench";
 import ChartLine from "../../icons/chart-line";
 import BuildingColumns from "../../icons/building-columns";
@@ -177,34 +178,23 @@ function AdminLayout({ children }) {
 									</Link>
 								</li>
 								<li>
-									<a
-										href="#"
-										className="nav-link link-dark"
+									<Link
+										href="/admin/students"
+										className={`nav-link ${
+											router.pathname ===
+											"/admin/students"
+												? "active"
+												: "link-dark"
+										} `}
 									>
-										<svg
-											className="bi pe-none me-2"
+										<BsFillPeopleFill
 											width={16}
 											height={16}
-										>
-											<use xlinkHref="#grid" />
-										</svg>
-										Products
-									</a>
-								</li>
-								<li>
-									<a
-										href="#"
-										className="nav-link link-dark"
-									>
-										<svg
-											className="bi pe-none me-2"
-											width={16}
-											height={16}
-										>
-											<use xlinkHref="#people-circle" />
-										</svg>
-										Customers
-									</a>
+											fill="currentColor"
+											className="me-2"
+										/>
+										Students
+									</Link>
 								</li>
 							</ul>
 							<hr />

@@ -74,13 +74,11 @@ function Home() {
 				<div className="row align-items-center g-lg-5 py-5">
 					<div className="col-lg-7 text-center text-lg-start">
 						<h1 className="display-4 fw-bold lh-1 mb-3">
-							Vertically centered hero sign-up form
+							Student clearance system
 						</h1>
 						<p className="col-lg-10 fs-4">
-							Below is an example form built entirely with
-							Bootstrap’s form controls. Each required form group
-							has a validation state that can be triggered by
-							attempting to submit the form without completing it.
+							A simple clearance system that covers from 100 level
+							to final year
 						</p>
 					</div>
 					<div className="col-md-10 mx-auto col-lg-5">

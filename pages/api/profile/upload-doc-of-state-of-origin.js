@@ -42,6 +42,7 @@ async function handler(req, res) {
 				{ _userId: user.id },
 				{
 					soproof: filename,
+					clearanceLevel: 1,
 				}
 			);
 
