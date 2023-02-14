@@ -22,9 +22,6 @@ function Fee({ p, user, paid, paymentId }) {
 		},
 	};
 
-	console.log(paid);
-	console.log(p._id);
-
 	const initializePayment = usePaystackPayment(config);
 
 	function onSuccess(data) {
@@ -57,8 +54,6 @@ function Fee({ p, user, paid, paymentId }) {
 	}
 
 	function handlePayment() {
-		// setPaymentInfo();
-
 		initializePayment(onSuccess);
 	}
 	return (
