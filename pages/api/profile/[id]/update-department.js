@@ -1,4 +1,5 @@
 import ProfileModel from "../../../../models/profile";
+import SessionModel from "../../../../models/session";
 import handleSession from "../../../../session/handle-session";
 import { ADMIN_LEVEL } from "../../../../auth_constants/auth";
 
@@ -12,14 +13,23 @@ async function handler(req, res) {
 
 			if (!user) throw new Error("Unathorized");
 
-			const { status } = req.body;
+			const { college, department } = req.body;
 			const id = req.query.id;
 
-			if (!status) {
-				throw new Error("Please, select a status");
+			if (!college) {
+				throw new Error("Please, select a college");
+			} else if (!department) {
+				throw new Error("Please, select a department");
 			}
 
-			await ProfileModel.findByIdAndUpdate(id, { status });
+			const sessions = await SessionModel.find({});
+			const lastSession = await sessions[sessions.length - 1];
+
+			await ProfileModel.findByIdAndUpdate(id, {
+				_collegeId: college,
+				_departmentId: department,
+				_sessionId: lastSession.id,
+			});
 
 			res.status(200).json({ ok: true, msg: "Success" });
 		} catch (error) {

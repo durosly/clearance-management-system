@@ -33,6 +33,8 @@ function StudentProfile({
 	const { id } = router.query;
 	const [status, setStatus] = useState(profile?.status || "pending");
 	const [isUpdating, setIsUpdating] = useState(false);
+	const [studentDepartment, setStudentDepartment] = useState("");
+	const [studentCollege, setStudentCollege] = useState("");
 
 	const date = new Date(profile?.dob || Date.now);
 
@@ -51,7 +53,34 @@ function StudentProfile({
 
 			if (response.data.ok) {
 				toast.success("Status updated");
-				router.reload();
+				// router.reload();
+			} else {
+				setIsUpdating(false);
+				throw new Error(response.data.msg);
+			}
+		} catch (error) {
+			setIsUpdating(false);
+			toast.error(error.message);
+		}
+	}
+
+	async function updateDeptCol(e) {
+		e.preventDefault();
+
+		if (isUpdating) return;
+		setIsUpdating(true);
+		try {
+			const response = await axios.put(
+				`/api/profile/${id}/update-department`,
+				{
+					college: studentCollege,
+					department: studentDepartment,
+				}
+			);
+
+			if (response.data.ok) {
+				toast.success("Status updated");
+				// router.reload();
 			} else {
 				setIsUpdating(false);
 				throw new Error(response.data.msg);
@@ -195,18 +224,30 @@ function StudentProfile({
 			<hr />
 			<Row>
 				<Col className="my-4">
-					<Form>
+					<Form onSubmit={updateDeptCol}>
 						<FloatingLabel
 							controlId="floatingSelect"
 							label="Select college"
 						>
-							<Form.Select aria-label="Floating label select example">
+							<Form.Select
+								value={studentCollege}
+								onChange={(e) =>
+									setStudentCollege(e.target.value)
+								}
+								aria-label="Floating label select example"
+							>
 								<option>-- college --</option>
 								{colleges.map((c) => (
 									<option value={c._id}>{c.name}</option>
 								))}
 							</Form.Select>
-							<Form.Select aria-label="Floating label select example">
+							<Form.Select
+								value={studentDepartment}
+								onChange={(e) =>
+									setStudentDepartment(e.target.value)
+								}
+								aria-label="Floating label select example"
+							>
 								<option>-- department --</option>
 								{departments.map((c) => (
 									<option value={c._id}>{c.name}</option>
@@ -216,6 +257,7 @@ function StudentProfile({
 						<Button
 							type="submit"
 							variant="primary"
+							disabled={isUpdating}
 						>
 							Update profile
 						</Button>
