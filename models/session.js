@@ -8,6 +8,6 @@ const sessionSchema = new mongoose.Schema({
 });
 
 const SessionModel =
-	mongoose.models.Session || mongoose.model("Session", sessionSchema);
+	mongoose?.models?.Session || mongoose.model("Session", sessionSchema);
 
 export default SessionModel;

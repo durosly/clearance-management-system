@@ -14,6 +14,7 @@ import SessionModel from "../models/session";
 import DepartmentModel from "../models/department";
 import { STUDENT_LEVEL } from "../auth_constants/auth";
 import { toast } from "react-toastify";
+import Link from "next/link";
 // import { stringifyDoc } from "../lib";
 
 function CourseRegistration({ firstSemester, secondSemester }) {
@@ -64,6 +65,16 @@ function CourseRegistration({ firstSemester, secondSemester }) {
 				<Row>
 					<Col>
 						<h2>Course Registration</h2>
+					</Col>
+				</Row>
+				<Row>
+					<Col>
+						<Link
+							className="btn btn-primary btn-"
+							href="/courses/forms"
+						>
+							View Course Forms
+						</Link>
 					</Col>
 				</Row>
 				<Row>
@@ -233,8 +244,6 @@ export async function getServerSideProps(context) {
 			department_code: department.abbr,
 		});
 	}
-
-	console.log({ firstSemester, secondSemester });
 
 	return {
 		props: {
