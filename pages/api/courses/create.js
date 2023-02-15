@@ -1,4 +1,5 @@
 import CourseModel from "../../../models/course";
+import DepartmentModel from "../../../models/department";
 import handleSession from "../../../session/handle-session";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
 
@@ -27,6 +28,8 @@ async function handler(req, res) {
 			} else if (!level) {
 				throw new Error("Enter course level");
 			}
+
+			const departmentDB = await DepartmentModel.findById(department);
 
 			const course = await CourseModel.create({
 				title,

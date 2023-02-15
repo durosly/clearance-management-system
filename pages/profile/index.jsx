@@ -121,7 +121,7 @@ function Profile({
 							<Card.Body>
 								<Card.Title>Course registration</Card.Title>
 
-								<Link href="/nice">Complete process</Link>
+								<Link href="/course-reg">Complete process</Link>
 							</Card.Body>
 						</Card>
 					</Col>
