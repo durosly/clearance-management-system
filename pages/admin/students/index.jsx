@@ -1,5 +1,6 @@
-import React from "react";
-import { Col, Row } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import axios from "axios";
 import Link from "next/link";
 import handleSession from "../../../session/handle-session";
 import { ADMIN_LEVEL } from "../../../auth_constants/auth";
@@ -7,9 +8,37 @@ import { ADMIN_LEVEL } from "../../../auth_constants/auth";
 import ProfileModel from "../../../models/profile";
 import AdminLayout from "../../../components/admin/layout/admin-layout";
 import Table from "react-bootstrap/Table";
+import { toast } from "react-toastify";
 import { stringifyDoc } from "../../../lib";
 
 function Student({ profiles }) {
+	const [isLoading, setIsLoading] = useState(false);
+	async function generateMatricNumbers() {
+		if (isLoading) return;
+		setIsLoading(true);
+		try {
+			const response = await axios.post(
+				"/api/session/generate-matnumber"
+			);
+			if (response.data.ok) {
+				toast.success("Matric numbers generated");
+				setIsLoading(false);
+			} else {
+				throw new Error(response.data.msg);
+			}
+		} catch (error) {
+			let errorMsg = "";
+
+			if (error?.response) {
+				errorMsg = error.response.data.msg;
+			} else {
+				errorMsg = error.message;
+			}
+			toast.error(errorMsg);
+			setIsLoading(false);
+		}
+	}
+
 	return (
 		<AdminLayout>
 			<Row className="mt-5">
@@ -20,6 +49,14 @@ function Student({ profiles }) {
 					>
 						View active students
 					</Link>
+				</Col>
+				<Col>
+					<Button
+						onClick={generateMatricNumbers}
+						variant="primary"
+					>
+						Generate Matric Number for newest session
+					</Button>
 				</Col>
 			</Row>
 			<Row>
