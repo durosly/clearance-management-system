@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 // import Form from "react-bootstrap/Form";
@@ -8,40 +9,36 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import Link from "next/link";
 
 function Header() {
-	const expand = "md";
-	return (
-		<Navbar
-			bg="light"
-			expand={expand}
-			className="mb-3"
-		>
-			<Container>
-				<Navbar.Brand href="#">Student Portal</Navbar.Brand>
-				<Navbar.Toggle
-					aria-controls={`offcanvasNavbar-expand-${expand}`}
-				/>
-				<Navbar.Offcanvas
-					id={`offcanvasNavbar-expand-${expand}`}
-					aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-					placement="end"
-				>
-					<Offcanvas.Header closeButton>
-						<Offcanvas.Title
-							id={`offcanvasNavbarLabel-expand-${expand}`}
-						>
-							Student Portal
-						</Offcanvas.Title>
-					</Offcanvas.Header>
-					<Offcanvas.Body>
-						<Nav className="justify-content-end flex-grow-1 pe-3">
-							<Link
-								className="btn btn-primary fbgv"
-								href="/profile"
-							>
-								Home
-							</Link>
-							{/* <Nav.Link href="#action2">Link</Nav.Link> */}
-							{/* <NavDropdown
+    const expand = "md";
+    return (
+        <Navbar bg="light" expand={expand} className="mb-3">
+            <Container>
+                <Navbar.Brand href="#">Student Portal</Navbar.Brand>
+                <Navbar.Toggle
+                    aria-controls={`offcanvasNavbar-expand-${expand}`}
+                />
+                <Navbar.Offcanvas
+                    id={`offcanvasNavbar-expand-${expand}`}
+                    aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
+                    placement="end"
+                >
+                    <Offcanvas.Header closeButton>
+                        <Offcanvas.Title
+                            id={`offcanvasNavbarLabel-expand-${expand}`}
+                        >
+                            Student Portal
+                        </Offcanvas.Title>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
+                        <Nav className="justify-content-end flex-grow-1 pe-3">
+                            <Link
+                                className="btn btn-primary fbgv"
+                                href="/profile"
+                            >
+                                Home
+                            </Link>
+                            {/* <Nav.Link href="#action2">Link</Nav.Link> */}
+                            {/* <NavDropdown
 								title="Dropdown"
 								id={`offcanvasNavbarDropdown-expand-${expand}`}
 							>
@@ -56,8 +53,8 @@ function Header() {
 									Something else here
 								</NavDropdown.Item>
 							</NavDropdown> */}
-						</Nav>
-						{/* <Form className="d-flex">
+                        </Nav>
+                        {/* <Form className="d-flex">
 							<Form.Control
 								type="search"
 								placeholder="Search"
@@ -65,12 +62,17 @@ function Header() {
 								aria-label="Search"
 							/>
 						</Form> */}
-						<Button variant="outline-success">Log out</Button>
-					</Offcanvas.Body>
-				</Navbar.Offcanvas>
-			</Container>
-		</Navbar>
-	);
+                        <Button
+                            onClick={() => signOut()}
+                            variant="outline-success"
+                        >
+                            Log out
+                        </Button>
+                    </Offcanvas.Body>
+                </Navbar.Offcanvas>
+            </Container>
+        </Navbar>
+    );
 }
 
 export default Header;

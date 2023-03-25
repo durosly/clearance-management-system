@@ -66,7 +66,8 @@ function Profile({
                     </Col>
                 </Row>
                 <hr />
-                {userSession.level === 100 && <Level100 />}
+                {(userSession.level === 100 ||
+                    userSession.level === "undefined") && <Level100 />}
             </Container>
         </UserWrapper>
     );
