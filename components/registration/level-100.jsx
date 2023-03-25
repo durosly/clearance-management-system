@@ -3,8 +3,9 @@ import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import classNames from "classnames";
 
-function Level100() {
+function Level100({ regLevel }) {
     return (
         <>
             <Row>
@@ -14,25 +15,37 @@ function Level100() {
             </Row>
             <Row className="row-gap-3">
                 <Col xs={12} sm={4} md={3}>
-                    <Card border="warning">
+                    <Card
+                        border={classNames({
+                            warning: regLevel < 2,
+                            success: regLevel >= 2,
+                        })}
+                    >
                         <Card.Body>
                             <Card.Title>Profile completion</Card.Title>
 
-                            <Link
-                                className="btn btn-primary"
-                                href="/profile/complete"
-                            >
-                                Complete process
-                            </Link>
+                            {regLevel < 2 ? (
+                                <Link
+                                    className={`btn btn-primary`}
+                                    href="/profile/complete"
+                                    disabled={regLevel >= 2}
+                                >
+                                    Complete process
+                                </Link>
+                            ) : (
+                                <button className="btn btn-primary disabled cursor-not-allowed">
+                                    Completed
+                                </button>
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col xs={12} sm={4} md={3}>
                     <Card
-                        border={`${
-                            "nice"
-                            // registrationLevel.v === "payment" && "danger"
-                        }`}
+                        border={classNames({
+                            warning: regLevel === 2,
+                            success: regLevel > 2,
+                        })}
                     >
                         <Card.Body>
                             <Card.Title>Payments</Card.Title>

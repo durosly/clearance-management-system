@@ -12,8 +12,6 @@ import CollegeModel from "../../models/college";
 import SessionModel from "../../models/session";
 import handleSession from "../../session/handle-session";
 import { stringifyDoc } from "../../lib";
-
-import getRegistrationLevel from "../../lib/get-registration-level";
 import Level100 from "../../components/registration/level-100";
 
 function Profile({
@@ -24,6 +22,7 @@ function Profile({
     college,
     registrationLevel,
 }) {
+    console.log(registrationLevel);
     return (
         <UserWrapper>
             <Container className="mb-5">
@@ -67,7 +66,9 @@ function Profile({
                 </Row>
                 <hr />
                 {(userSession.level === 100 ||
-                    userSession.level === "undefined") && <Level100 />}
+                    userSession.level === "undefined") && (
+                    <Level100 regLevel={registrationLevel} />
+                )}
             </Container>
         </UserWrapper>
     );
@@ -96,7 +97,7 @@ export async function getServerSideProps(context) {
         profile?._departmentId
     );
     const userCollege = await CollegeModel.findById(profile?._collegeId);
-    const registrationLevel = await getRegistrationLevel({ user });
+    // const registrationLevel = await getRegistrationLevel({ user });
 
     return {
         props: {
@@ -116,7 +117,7 @@ export async function getServerSideProps(context) {
             userSession: {
                 level: userSession?.level || "undefined",
             },
-            registrationLevel,
+            registrationLevel: profile?.clearanceLevel || -1,
         },
     };
 }
