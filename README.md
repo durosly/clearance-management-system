@@ -23,3 +23,4 @@ Here is a summary of how to create a payment fee
 | 2    | Upload state of origin document   | 1               |
 | 3    | Upload birth certificate document | 2               |
 | 4    | Complete all payments             | 3               |
+| 5    | Course registration and approval  | 4               |
