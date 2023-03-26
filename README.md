@@ -1,4 +1,4 @@
-# A simple clearance management system for higher institutions in Nigeria
+# ✨✨✨ A simple clearance management system for higher institutions in Nigeria ✨✨✨
 
 This system is an opiniated clearance system that enforces how the clearance process would be evaluated
 
@@ -24,3 +24,8 @@ Here is a summary of how to create a payment fee
 | 3    | Upload birth certificate document | 2               |
 | 4    | Complete all payments             | 3               |
 | 5    | Course registration and approval  | 4               |
+
+## Course Form
+
+Course form displays the courses available for registration based on students current level.
+Registered courses requires approval from admin thereafter student gets access to print button and can print course form from the page directly
