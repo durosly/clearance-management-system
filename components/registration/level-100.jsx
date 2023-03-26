@@ -90,8 +90,8 @@ function Level100({ regLevel }) {
                 <Col xs={12} sm={4} md={3}>
                     <Card
                         border={classNames({
-                            warning: regLevel === 2,
-                            success: regLevel > 2,
+                            warning: regLevel === 3,
+                            success: regLevel > 3,
                         })}
                     >
                         <Card.Body>
