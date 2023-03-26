@@ -108,6 +108,7 @@ export async function getServerSideProps(context) {
     }
     const paymentsDone = await PaymentModel.find({
         sessionInfo: `${sessionDB.title} (${sessionDB.level})`,
+        _userId: user.id,
     });
 
     const paymentsIDs = paymentsDone.map((p) => p._paymentListId);
