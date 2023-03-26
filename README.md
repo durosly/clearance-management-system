@@ -1,5 +1,7 @@
 # A simple clearance management system for higher institutions in Nigeria
 
+This system is an opiniated clearance system that enforces how the clearance process would be evaluated
+
 ## 💵Create payment
 
 Payments rely on session, college and department and should be defined before attempting to create a payment fee
