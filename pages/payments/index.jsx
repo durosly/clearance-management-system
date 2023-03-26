@@ -15,6 +15,7 @@ import handleSession from "../../session/handle-session";
 import Fee from "../../components/payments/fee";
 import { Alert } from "react-bootstrap";
 import { FiAlertTriangle } from "react-icons/fi";
+import { GrCircleAlert } from "react-icons/gr";
 
 function Payments({ payments, user, paymentsDone, isActive }) {
     console.log(paymentsDone);
@@ -30,24 +31,33 @@ function Payments({ payments, user, paymentsDone, isActive }) {
                     <Row>
                         <Col>
                             <ListGroup>
-                                {payments.map((p) => {
-                                    let paymentId = null;
-                                    if (paymentsDone.includes(p._id)) {
-                                        const index = paymentsDone.indexOf(
-                                            p._id
+                                {payments.length > 0 ? (
+                                    payments.map((p) => {
+                                        let paymentId = null;
+                                        if (paymentsDone.includes(p._id)) {
+                                            const index = paymentsDone.indexOf(
+                                                p._id
+                                            );
+                                            paymentId = paymentsDone[index];
+                                        }
+                                        return (
+                                            <Fee
+                                                key={p._id}
+                                                p={p}
+                                                user={user}
+                                                paid={paymentsDone.includes(
+                                                    p._id
+                                                )}
+                                                paymentId={paymentId}
+                                            />
                                         );
-                                        paymentId = paymentsDone[index];
-                                    }
-                                    return (
-                                        <Fee
-                                            key={p._id}
-                                            p={p}
-                                            user={user}
-                                            paid={paymentsDone.includes(p._id)}
-                                            paymentId={paymentId}
-                                        />
-                                    );
-                                })}
+                                    })
+                                ) : (
+                                    <Alert variant="warning">
+                                        <GrCircleAlert className="w-5 me-1" />
+                                        No payments available
+                                    </Alert>
+                                )}
                             </ListGroup>
                         </Col>
                     </Row>
@@ -91,14 +101,15 @@ export async function getServerSideProps(context) {
     }
 
     const profile = await ProfileModel.findOne({ _userId: user.id });
+    const sessionDB = await SessionModel.findById(profile._sessionId);
 
     const paymentList = await PaymentListModel.find({
         _collegeId: { $in: ["all", profile._collegeId] },
         _departmentId: { $in: ["all", profile._departmentId] },
         _sessionId: profile._sessionId,
+        sessionInfo: `${sessionDB.title} (${sessionDB.level})`,
     });
 
-    const sessionDB = await SessionModel.findById(profile._sessionId);
     if (!sessionDB) {
         return {
             props: {
