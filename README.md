@@ -12,3 +12,14 @@ Here is a summary of how to create a payment fee
 2. select session, college and department level for payment fee
 3. Enter amount
 4. Submit form and you are good to go👍
+
+## Clearance level
+
+### 100 level
+
+| Step | Activity                          | Clearance level |
+| ---- | --------------------------------- | --------------- |
+| 1    | Update profile                    | 0               |
+| 2    | Upload state of origin document   | 1               |
+| 3    | Upload birth certificate document | 2               |
+| 4    | Complete all payments             | 3               |
