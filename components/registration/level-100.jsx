@@ -1,11 +1,37 @@
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import classNames from "classnames";
+import axios from "axios";
 
 function Level100({ regLevel }) {
+    const [per, setPer] = useState(0);
+
+    useEffect(() => {
+        async function loadPercentage() {
+            try {
+                const response = await axios(
+                    `/api/profile/get-payment-percentage`
+                );
+                const { ok, percentage } = response.data;
+
+                if (ok) {
+                    console.log(percentage);
+                    setPer(percentage);
+                } else {
+                    throw new Error();
+                }
+            } catch (error) {
+                console.log(error.message);
+                setPer(0);
+            }
+        }
+
+        loadPercentage();
+    });
     return (
         <>
             <Row>
@@ -49,14 +75,25 @@ function Level100({ regLevel }) {
                     >
                         <Card.Body>
                             <Card.Title>Payments</Card.Title>
-                            <ProgressBar animated now={45} />
+                            <ProgressBar animated now={per} />
 
-                            <Link href="/payments">Complete payment</Link>
+                            {regLevel < 2 ? (
+                                <Link href="/payments">Complete payment</Link>
+                            ) : (
+                                <button className="btn btn-primary disabled cursor-not-allowed mt-2">
+                                    Completed
+                                </button>
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col xs={12} sm={4} md={3}>
-                    <Card border="danger">
+                    <Card
+                        border={classNames({
+                            warning: regLevel === 2,
+                            success: regLevel > 2,
+                        })}
+                    >
                         <Card.Body>
                             <Card.Title>Course registration</Card.Title>
 
