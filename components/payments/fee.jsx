@@ -5,6 +5,7 @@ import { Badge, Button, ListGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { usePaystackPayment } from "react-paystack";
 import axios from "axios";
+import commaNumber from "comma-number";
 
 function Fee({ p, user, paid, paymentId }) {
     const router = useRouter();
@@ -81,7 +82,7 @@ function Fee({ p, user, paid, paymentId }) {
                 </Button>
             )}
             <Badge bg="primary" pill>
-                {p.amount.toLocaleString()}
+                {commaNumber(p.amount)}
             </Badge>
         </ListGroup.Item>
     );
